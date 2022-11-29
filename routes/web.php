@@ -23,6 +23,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/task', [TaskController::class, 'index'])->name('task');
+
 Route::resource('tasks', TaskController::class);
 
 Route::middleware('auth')->group(function () {

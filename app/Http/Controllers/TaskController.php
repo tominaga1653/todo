@@ -14,12 +14,22 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::where('status', false)
-                     ->where('user_id', \Auth::user()->id)
-                     ->get();
-        return view('tasks.index', compact('tasks'));
+        if ($request->input('search') === null) {
+            $tasks = Task::where('status', false)
+                        ->where('user_id', \Auth::user()->id)
+                        ->get();
+            return view('tasks.index', compact('tasks'));
+        } else {
+            $search = $request->input('search');
+            $tasks = Task::where('name', 'LIKE' , "%{$search}%")
+                        ->where('user_id', \Auth::user()->id)
+                        ->where('status', false)
+                        ->get();
+            return view('tasks.index', compact('tasks','search'));
+                
+        }
     }
 
     /**
@@ -113,6 +123,7 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Task::find($id)->delete();
+        return redirect('/tasks');
     }
 }

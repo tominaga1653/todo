@@ -3,6 +3,20 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             TO DO LIST
         </h2>
+        <div class="text-right">
+            <form method="GET" action="/tasks">
+                <input type="search" placeholder="タスク検索" name="search" value="@if (isset($search)) {{ $search }} @endif">
+                @csrf
+                
+                <button type="submit">検索</button>
+                <button>
+                    <a href="/tasks" class="">
+                        クリア
+                    </a>
+                </button>
+            </form>
+        </div>
+        
     </x-slot>
 
     <div class="py-12">
@@ -35,7 +49,8 @@
                 </div>
             </div>
 
-            @if ($tasks->isNotEmpty())
+            	
+          @if($tasks->isNotEmpty())
             <div class="inline-block min-w-full py-2 align-middle">
               <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
                 <table class="min-w-full divide-y divide-gray-300">
@@ -77,7 +92,8 @@
                                 class="inline-block text-center py-4 w-20 underline underline-offset-2 text-sky-600 md:hover:bg-sky-100 transition-colors">編集</a>
                             </div>
                             <div>
-                              <form action="/tasks/{{ $item->id }}" method="post"
+                              <form onsubmit="return deleteTask();"
+                                action="/tasks/{{ $item->id }}" method="post"
                                 class="inline-block text-gray-500 font-medium"
                                 role="menuitem" tabindex="-1">
                                 @csrf
@@ -94,7 +110,17 @@
                 </table>
               </div>
             </div>
-            @endif
+           	
+          @endif
         </div>
     </div>
 </x-app-layout>
+<script>
+  function deleteTask() {
+    if (confirm('本当に削除しますか？')) {
+      return true;    
+    } else {
+      return false; 
+    }   
+  }
+</script>
